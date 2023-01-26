@@ -1,73 +1,230 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## 1. auth(인증관련)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### 1-1. login(로그인)
 
-## Description
+- method: POST
+- url: localhost:3000/api/login
+- bodyParams: email, password
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1-2. logout(로그아웃)
 
-## Installation
+- method: POST
+- url: localhost:3000/api/logout
+- header: X-Auth-Token
 
-```bash
-$ npm install
+### 1-3. register(가입)
+
+- method: POST
+- url: localhost:3000/api/user
+- bodyParams: email, password
+
+### 1-4. user
+
+- method: GET
+- localhost:3000/api/user
+- header: X-Auth-Token
+- response:
+
+```
+{
+  _id: "###",
+  email: "###"
+}
 ```
 
-## Running the app
+## 2. article(게시글)
 
-```bash
-# development
-$ npm run start
+### 2-1. article 게시글 작성
 
-# watch mode
-$ npm run start:dev
+- method: POST
+- url: localhost:3000/api/article
+- auth: true
+- header: X-Auth-Token
+- bodyParams: content
+- response:
 
-# production mode
-$ npm run start:prod
+```
+{
+  userId: "###",
+  userName: "###",
+  content: "###",
+  createdAt: "###",
+  commentCount: "###",
+  likeCount: "###",
+  likeUsers: ["###"],
+}
 ```
 
-## Test
+### 2-2. article 게시글 수정
 
-```bash
-# unit tests
-$ npm run test
+- method: PUT
+- url: localhost:3000/api/article
+- auth: true
+- header: X-Auth-Token
+- bodyParams: content, \_id
+- response:
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+{
+  userId: "###",
+  userName: "###",
+  content: "###",
+  createdAt: "###",
+  commentCount: "###",
+  likeCount: "###",
+  likeUsers: ["###"],
+}
 ```
 
-## Support
+### 2-3. article 게시글 삭제
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- method: DELETE
+- url: localhost:3000/api/article
+- auth: true
+- header: X-Auth-Token
+- bodyParams: \_id
 
-## Stay in touch
+### 2-4. articles 게시글 목록
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- method: GET
+- url: localhost:3000/api/articles/:currentPage
+- auth: 선택
+- header: X-Auth-Token(선택)
+- urlParams: currentPage
+- response:
 
-## License
+```
+{
+  articleList: [
+    {
+      userId: "###",
+      userName: "###",
+      content: "###",
+      createdAt: "###",
+      commentCount: "###",
+      likeCount: "###",
+      likeUsers: ["###"],
+    },
+    ...
+  ],
+  totalPage: ###,
+  menuPopup:'###',
+  editMode:'###'
+}
+```
 
-  Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 2-5. article 게시글 한개
+
+- method: GET
+- url: localhost:3000/api/articles/:\_id
+- auth: false
+- urlParams: \_id
+- response:
+
+```
+{
+  userId: "###",
+  userName: "###",
+  content: "###",
+  createdAt: "###",
+  commentCount: "###",
+  likeCount: "###",
+  likeUsers: ["###"],
+}
+```
+
+## 3. like
+
+### 3-1. like 표시
+
+- method: PUT
+- url: localhost:3000/api/like
+- auth: true
+- header: X-Auth-Token
+- bodyParams: articleId
+
+### 3-2. like 해제
+
+- method: PUT
+- url: localhost:3000/api/cancellike
+- auth: true
+- header: X-Auth-Token
+- bodyParams: articleId
+
+### 3-3. likes
+
+- method: GET
+- url: localhost:3000/api/likes/:currentPage
+- auth: true
+- header: X-Auth-Token
+- urlParam: currentPage
+- response:
+
+```
+{
+    articleList: [
+      {
+        userId: "###",
+        userName: "###",
+        content: "###",
+        createdAt: "###",
+        commentCount: "###",
+        likeCount: "###",
+        likeUsers: ["###"],
+      },
+      ...
+    ],
+    totalPage: ###,
+    menuPopup:'###',
+    editMode:'###'
+}
+```
+
+## 4. comment
+
+### 4-1. comment 추가
+
+- method: POST
+- url: localhost:3000/api/comments
+- auth: true
+- header: X-Auth-Token
+- bodyParams: articleId, content
+- response:
+
+```
+{
+  userId: "###",
+  userName: "###",
+  articleId: "###",
+  content: "###",
+  createdAt: "###",
+}
+```
+
+### 4-2. comment 삭제
+
+- method: DELETE
+- url: localhost:3000/api/comments
+- auth: true
+- header: X-Auth-Token
+- bodyParams: \_id, articleId
+
+### 4-3 comment 목록
+
+- method: GET
+- url: localhost:3000/api/comments/:\_id
+- response:
+
+```
+[
+  {
+    userId: "###",
+    userName: "###",
+    articleId: "###",
+    content: "###",
+    createdAt: "###",
+  },
+
+]
+
+```
